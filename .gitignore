@@ -26,6 +26,9 @@ Thumbs.db
 .env*
 !.env.example
 
+notes.md
+
 # Data
 data/raw/
+data/processed/
 
