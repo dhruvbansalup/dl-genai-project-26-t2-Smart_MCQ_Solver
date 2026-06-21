@@ -3,8 +3,10 @@ from src.utils.environment import get_environment
 
 ENV = get_environment()
 
-class EnvConfig:
+class GeneralConfig:
+    NUM_OPTIONS=5
 
+class EnvConfig:
     if ENV == "kaggle":
         RAW_DATA_DIR = "/kaggle/input/competitions/smart-mcq-solver-challenge/"
         PROCESSED_DATA_DIR="/kaggle/working/data/processed"
