@@ -33,3 +33,6 @@ data/raw/
 data/processed/
 data/submissions/
 
+# Outputs
+outputs/
+
