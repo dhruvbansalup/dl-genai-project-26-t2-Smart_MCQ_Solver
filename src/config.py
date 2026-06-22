@@ -7,6 +7,8 @@ ENV = get_environment()
 class GeneralConfig:
     NUM_OPTIONS=5
     SEED=42
+    # From EDA, max len of prompt or option is 118 words
+    MAX_LENGTH=120
 
 class WandbConfig:
     PROJECT_NAME="24f1001707-t22026"

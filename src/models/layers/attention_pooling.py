@@ -12,9 +12,13 @@ class AttentionPooling(nn.Module):
         # Weights (W)
         self.attention_weights = nn.Linear(input_dim, 1)
 
-    def forward(self, x):
+    def forward(self, x, attention_mask=None):
 
         scores = self.attention_weights(x)
+
+        if attention_mask is not None:
+            scores = scores.masked_fill(attention_mask.unsqueeze(-1) == 0, float('-inf'))
+
         attention_weights = torch.softmax(scores, dim=1)
 
         # A=Softmax(W*x)
