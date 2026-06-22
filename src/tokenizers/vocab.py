@@ -50,3 +50,23 @@ class Vocabulary:
 
     def __len__(self):
         return len(self.word2idx)
+    
+    @classmethod
+    def from_word2idx(cls, word2idx):
+        #Helper to create vocab from existing word2idx mapping
+        vocab=cls()
+        vocab.word2idx = word2idx
+        vocab.idx2word = {idx: word for word, idx in word2idx.items()}
+        return vocab
+
+def build_vocabulary(df):
+    # Helper to build vocab from dataset
+
+    vocab = Vocabulary()
+
+    for _, row in df.iterrows():
+        vocab.build_vocab([row['prompt']])
+        for option in ['A', 'B', 'C', 'D', 'E']:
+            vocab.build_vocab([row[option]])
+
+    return vocab

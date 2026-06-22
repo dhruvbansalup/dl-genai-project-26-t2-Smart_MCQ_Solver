@@ -89,3 +89,25 @@ class BiLSTM01(BaseModel):
         scores = scores.reshape(batch_size, num_options)
 
         return scores
+    
+
+
+    # Vocab persistance helpers for inference
+
+    def attach_vocab(self, vocab):
+        #Helper to attach vocab to model for encoding during inference
+        self.word2idx=vocab.word2idx
+
+    def on_save_checkpoint(self, checkpoint):
+        #Helper to save vocab along with model checkpoint
+        checkpoint['word2idx'] = self.word2idx
+
+    def on_load_checkpoint(self, checkpoint):
+        #Helper to load vocab along with model checkpoint
+        self.word2idx = checkpoint['word2idx']
+
+    @property
+    def vocab(self):
+        #Helper to get vocab from model via model.vocab
+        from src.tokenizers.vocab import Vocabulary
+        return Vocabulary.from_word2idx(self.word2idx)

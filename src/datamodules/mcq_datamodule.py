@@ -52,6 +52,7 @@ class MCQDataModule(pl.LightningDataModule):
             #speedup
             num_workers=self.num_workers,
             pin_memory=True,
+            persistent_workers=True,
         )
     
     def val_dataloader(self):
@@ -63,6 +64,7 @@ class MCQDataModule(pl.LightningDataModule):
             shuffle=False,
             num_workers=self.num_workers,
             pin_memory=True,
+            persistent_workers=True,
         )
     
     def test_dataloader(self):
@@ -71,5 +73,8 @@ class MCQDataModule(pl.LightningDataModule):
         return DataLoader(
             self.test_dataset,
             batch_size=self.batch_size,
-            shuffle=False
+            shuffle=False,
+            num_workers=self.num_workers,
+            pin_memory=True,
+            persistent_workers=True,
         )

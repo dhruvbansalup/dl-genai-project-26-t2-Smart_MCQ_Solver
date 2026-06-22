@@ -6,7 +6,7 @@ from pytorch_lightning.loggers import WandbLogger
 from src.config import GeneralConfig, EnvConfig, WandbConfig
 from src.utils.time_utils import time_now_ist
 
-def train(DATA_MODULE, MODEL,max_epochs, log=True, upload_kaggle=True):
+def train(DATA_MODULE, MODEL,max_epochs, log=True, upload_kaggle=True, trainer_gradient_clip_val=0.0):
 
     # setting for matrix multiplication for better performance
     torch.set_float32_matmul_precision('high')
@@ -53,6 +53,8 @@ def train(DATA_MODULE, MODEL,max_epochs, log=True, upload_kaggle=True):
         enable_progress_bar=True,
         accelerator="auto",
         devices="auto",
+        gradient_clip_val=trainer_gradient_clip_val, # clip gradients to avoid exploding gradients
+        default_root_dir=EnvConfig.OUTPUT_DIR,
     )
 
     #Training
