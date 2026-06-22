@@ -1,8 +1,12 @@
 import os
 from pathlib import Path
+
+from dotenv import load_dotenv
 from src.utils.environment import get_environment
 
 ENV = get_environment()
+
+load_dotenv()
 
 class GeneralConfig:
     NUM_OPTIONS=5
@@ -12,6 +16,7 @@ class GeneralConfig:
 
 class WandbConfig:
     PROJECT_NAME="24f1001707-t22026"
+    WANDB_API_KEY=os.getenv("WANDB_API_KEY")
 
 class KaggleConfig:
     KAGGLE_USERNAME=os.getenv("KAGGLE_USERNAME")

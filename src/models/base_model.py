@@ -15,8 +15,6 @@ class BaseModel(pl.LightningModule, ABC):
     Abstract Base class for all models
     """
 
-    #TODO: Complete this
-
     def __init__(self, lr):
         super().__init__()
         self.lr = lr

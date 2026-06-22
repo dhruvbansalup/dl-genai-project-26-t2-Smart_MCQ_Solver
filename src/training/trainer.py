@@ -1,4 +1,5 @@
 import torch
+import secrets
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 from pytorch_lightning.loggers import WandbLogger
@@ -41,7 +42,9 @@ def train(DATA_MODULE, MODEL,max_epochs, log=True, upload_kaggle=True, trainer_g
             project=WandbConfig.PROJECT_NAME,
             name=f"{model_class_name}-{time_now_ist()}",
             save_dir=EnvConfig.OUTPUT_DIR,
-            log_model=True
+            log_model=True,
+            # avoid conflicts with other runs
+            id=f"{model_class_name}-{time_now_ist(cleaned=True)}-{secrets.token_hex(2)}",
         )
 
     trainer = pl.Trainer(

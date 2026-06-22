@@ -42,4 +42,4 @@ if __name__ == "__main__":
     model.attach_vocab(vocab)
 
     # Train the model
-    train(DATA_MODULE=data_module, MODEL=model, max_epochs=10, log=True, upload_kaggle=True, trainer_gradient_clip_val=1.0)
+    train(DATA_MODULE=data_module, MODEL=model, max_epochs=12, log=True, upload_kaggle=True, trainer_gradient_clip_val=1.0)
