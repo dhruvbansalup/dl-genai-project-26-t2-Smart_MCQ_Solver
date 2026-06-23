@@ -53,7 +53,6 @@ def train(DATA_MODULE, MODEL,max_epochs, log=True, upload_kaggle=True, trainer_g
         callbacks=checkpoint_callbacks,
         precision="16-mixed" if torch.cuda.is_available() else "32",
         log_every_n_steps=10,
-        enable_progress_bar=True,
         accelerator="auto",
         devices="auto",
         gradient_clip_val=trainer_gradient_clip_val, # clip gradients to avoid exploding gradients

@@ -1,3 +1,4 @@
+import argparse
 import pandas as pd
 
 from src.config import EnvConfig, GeneralConfig
@@ -41,5 +42,11 @@ if __name__ == "__main__":
     # attach vocab to model for encoding during inference
     model.attach_vocab(vocab)
 
+    #get cli arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--log", type=bool, default=False)
+    parser.add_argument("--uploadToKaggle", type=bool, default=False)
+    args = parser.parse_args()
+
     # Train the model
-    train(DATA_MODULE=data_module, MODEL=model, max_epochs=12, log=True, upload_kaggle=True, trainer_gradient_clip_val=1.0)
+    train(DATA_MODULE=data_module, MODEL=model, max_epochs=12, log=args.log, upload_kaggle=args.uploadToKaggle, trainer_gradient_clip_val=1.0)

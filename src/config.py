@@ -20,7 +20,7 @@ class WandbConfig:
 
 class KaggleConfig:
     KAGGLE_USERNAME=os.getenv("KAGGLE_USERNAME")
-    KAGGLE_KEY=os.getenv("KAGGLE_KEY")
+    KAGGLE_API_TOKEN=os.getenv("KAGGLE_API_TOKEN")
     KAGGLEHUB_MODEL_REPO="dl-genai-project-26-t2-smart-mcq-solver"
 
 class EnvConfig:
