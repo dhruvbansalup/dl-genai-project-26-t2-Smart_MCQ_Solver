@@ -24,8 +24,8 @@ def train(DATA_MODULE, MODEL,max_epochs, log=True, upload_kaggle=True, trainer_g
             mode="max",
             filename=f"{model_class_name}-{{epoch:02d}}-{{val_map3:.4f}}",
             dirpath=EnvConfig.CHECKPOINT_DIR,
-            save_top_k=3,
-            save_last=True,
+            save_top_k=1,
+            save_last=False,
         ),
         EarlyStopping(
             monitor="val_map3",

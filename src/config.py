@@ -15,6 +15,7 @@ class GeneralConfig:
     MAX_LENGTH=120
 
 class WandbConfig:
+    ENTITY="24f1001707-dl-genai-project"
     PROJECT_NAME="24f1001707-t22026"
     WANDB_API_KEY=os.getenv("WANDB_API_KEY")
 
