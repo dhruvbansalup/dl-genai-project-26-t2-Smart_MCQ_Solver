@@ -23,7 +23,7 @@ def train_transformer(model_class, tokenizer_model_name, log=False, uploadToKagg
         test_df=None,
         tokenizer=tokenizer,
         max_length=GeneralConfig.MAX_LENGTH*2+2,# we have pairs, and 2 extra tokens for [QUESTION] and [OPTION],
-        batch_size=16,
+        batch_size=8,
         num_workers=4,
     )
 

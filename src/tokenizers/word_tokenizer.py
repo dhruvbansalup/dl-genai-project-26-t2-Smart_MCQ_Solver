@@ -1,4 +1,5 @@
 import re
+import torch
 
 class WordTokenizer:
     """
@@ -14,7 +15,10 @@ class WordTokenizer:
         tokens = re.findall(r'\w+', text) # tokenize by words, remove punctuation
         return tokens
 
-    def encode(self, prompt, option, max_length):
+    def __encode(self, prompt, option, max_length):
+        """
+        Helper to encode single (prompt, option) pair to indices and attention mask.
+        """
 
         # Build the text pair
         text = (
@@ -38,4 +42,23 @@ class WordTokenizer:
         return {
             'input_ids': ids,
             'attention_mask': attention_mask
+        }
+
+
+    def encode_batch(self, prompt, options, max_length):
+        """
+        Encode batch of options for a given prompt.
+        """
+        # tokenized (prompt+option) pairs
+        input_ids=[]
+        # used to ignore the padding tokens
+        attention_masks=[]
+
+        for option in options:
+            encoding=self.__encode(prompt, option, max_length)
+            input_ids.append(encoding['input_ids'])
+            attention_masks.append(encoding['attention_mask'])
+        return {
+            'input_ids': torch.tensor(input_ids, dtype=torch.long), # (5, L)
+            'attention_mask': torch.tensor(attention_masks, dtype=torch.long) # (5, L)
         }

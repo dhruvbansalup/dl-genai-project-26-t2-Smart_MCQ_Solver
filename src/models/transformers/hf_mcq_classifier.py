@@ -20,6 +20,9 @@ class HFMCQClassifier(BaseModel):
         # Init the model from huggingface
         self.encoder=AutoModel.from_pretrained(self.model_name)
 
+        # Set the encoder to train mode (by default, HF models are in eval mode)
+        self.encoder.train()
+
         # getting transformer output embedding size for classifier input
         hidden_size=self.encoder.config.hidden_size
 
@@ -57,4 +60,3 @@ class HFMCQClassifier(BaseModel):
         logits = logits.reshape(batch_size, num_options)
 
         return logits
-
