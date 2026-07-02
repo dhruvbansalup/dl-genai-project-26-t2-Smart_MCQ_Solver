@@ -16,9 +16,11 @@ class AttentionPooling(nn.Module):
 
         scores = self.attention_weights(x)
 
+        # Masking padded tokens so they wont contribute to weights, unsqueeze to match the shape of scores (B*5, L, 1) with attention_mask (B*5, L)
         if attention_mask is not None:
             scores = scores.masked_fill(attention_mask.unsqueeze(-1) == 0, float('-inf'))
 
+        # softmax will convert the masked scores to 0 and rest to probabilities
         attention_weights = torch.softmax(scores, dim=1)
 
         # A=Softmax(W*x)

@@ -24,15 +24,20 @@ class MCQDataset(Dataset):
 
         prompt=row['prompt']
 
+        # option tokens are tokenized (prompt+option) pairs
         option_tokens=[]
+        # attention masks are used to ignore the padding tokens - used in attention pooling
         attention_masks=[]
+
         for o in self.LABEL_MAP.keys():
-            encoded=self.__build_pair(prompt, row[o])
+            encoded=self.tokenizer.encode(prompt, row[o], max_length=self.max_length)
+
             option_tokens.append(encoded['input_ids'])
             attention_masks.append(encoded['attention_mask'])
 
         x={
-            'input_ids': torch.tensor(option_tokens, dtype=torch.long), 'attention_mask': torch.tensor(attention_masks, dtype=torch.long)
+            'input_ids': torch.tensor(option_tokens, dtype=torch.long),
+             'attention_mask': torch.tensor(attention_masks, dtype=torch.long)
         }
 
         if not self.return_labels:
@@ -41,12 +46,3 @@ class MCQDataset(Dataset):
         # for val/test
         y=self.LABEL_MAP[row['answer']]
         return x, y
-
-    def __build_pair(self, prompt, option):
-
-        text = (
-            f"[QUESTION]: {prompt} "
-            f"[OPTION]: {option}"
-        )
-
-        return self.tokenizer.encode(text, max_length=self.max_length)

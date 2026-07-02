@@ -14,7 +14,14 @@ class WordTokenizer:
         tokens = re.findall(r'\w+', text) # tokenize by words, remove punctuation
         return tokens
 
-    def encode(self, text, max_length):
+    def encode(self, prompt, option, max_length):
+
+        # Build the text pair
+        text = (
+            f"[QUESTION]: {prompt} "
+            f"[OPTION]: {option}"
+        )
+
         #Convert text to indices
         tokens = self.tokenize(text)
         ids = [self.vocab.word_to_index(token) for token in tokens]

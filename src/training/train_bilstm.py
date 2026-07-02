@@ -9,7 +9,7 @@ from src.datamodules.mcq_datamodule import MCQDataModule
 from src.models.lstm.bilstm import BiLSTM01
 from src.training.trainer import train
 
-if __name__ == "__main__":
+def train_bilstm(log=False, uploadToKaggle=False):
     ensure_processed_data_exists()
 
     # Loading dataset
@@ -42,11 +42,14 @@ if __name__ == "__main__":
     # attach vocab to model for encoding during inference
     model.attach_vocab(vocab)
 
+    # Train the model
+    train(DATA_MODULE=data_module, MODEL=model, max_epochs=12, log=log, upload_kaggle=uploadToKaggle)
+
+if __name__ == "__main__":
     #get cli arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("--log", type=bool, default=False)
     parser.add_argument("--uploadToKaggle", type=bool, default=False)
     args = parser.parse_args()
 
-    # Train the model
-    train(DATA_MODULE=data_module, MODEL=model, max_epochs=12, log=args.log, upload_kaggle=args.uploadToKaggle, trainer_gradient_clip_val=1.0)
+    train_bilstm(log=args.log, uploadToKaggle=args.uploadToKaggle)
