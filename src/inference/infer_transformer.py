@@ -16,7 +16,6 @@ def infer_transformer(model_handle, checkpoint_name, model_class, tokenizer_mode
 
     #Loading Model
     model=load_kagglehub_model(model_handle=model_handle, ckpt_name=checkpoint_name, model_class=model_class, load_to_device=device)
-    print("Model Loaded Successfully!")
 
     # Get tokenized test data
     tokenizer = HFTokenizer(model_name=tokenizer_model_name)
@@ -53,7 +52,7 @@ if __name__ == "__main__":
             "model_class": BERT,
             "tokenizer_model_name": "bert-base-uncased",
             "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/bert",
-            "checkpoint_name": "BERT-epoch=02-val_map31.0000.ckpt"
+            "checkpoint_name": "BERT-epoch02-val_map31.0000.ckpt"
         },
     }
 

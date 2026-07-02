@@ -28,7 +28,7 @@ def upload_to_kagglehub(model,trainer):
 
 
 def kagglehub_download_model(model_handle, ckpt_name):
-    download_dir="downloads"
+    download_dir = os.path.join("downloads", model_handle.split("/")[-1].lower())
 
     # Check if already downloaded
     local_path = os.path.join(download_dir, ckpt_name)
@@ -49,10 +49,14 @@ def kagglehub_download_model(model_handle, ckpt_name):
 
 def load_kagglehub_model(model_handle, ckpt_name, model_class, load_to_device):
     model_path = kagglehub_download_model(model_handle, ckpt_name)
-    if model_path:
-        model = model_class.load_from_checkpoint(model_path).to(load_to_device)
-        model.eval()
-        return model
-    else:
-        print("Failed to load model from KaggleHub.")
-        return None
+
+    if model_path is None:
+        raise RuntimeError("Failed to download model from KaggleHub.")
+
+    print(f"Loading model from: {model_path}")
+
+    model = model_class.load_from_checkpoint(model_path).to(load_to_device)
+    model.eval()
+    print ("Model Loaded Successfully!")
+
+    return model

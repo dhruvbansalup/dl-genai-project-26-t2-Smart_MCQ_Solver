@@ -17,7 +17,6 @@ def infer_bilstm():
 
     #Loading Model
     model=load_kagglehub_model(model_handle=handle, ckpt_name=checkpoint_name, model_class=BiLSTM01, load_to_device=device)
-    print("Model Loaded Successfully!")
 
     # Get tokenized test data
     tokenizer = WordTokenizer(model.vocab) # type: ignore
