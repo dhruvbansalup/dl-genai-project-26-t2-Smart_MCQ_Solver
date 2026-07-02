@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     #get cli arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", type=str, choices=MODELS.keys())
+    parser.add_argument("--model", type=str, choices=MODELS.keys(), required=True)
     parser.add_argument("--log", type=bool, default=False)
     parser.add_argument("--uploadToKaggle", type=bool, default=False)
     args = parser.parse_args()
