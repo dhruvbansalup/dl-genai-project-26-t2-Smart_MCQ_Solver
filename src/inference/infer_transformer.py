@@ -4,6 +4,7 @@ import pandas as pd
 from pathlib import Path
 
 from src.models.transformers.bert import BERT
+from src.models.transformers.roberta import RoBERTa
 from src.datamodules.mcq_datamodule import MCQDataModule
 from src.tokenizers.hf_tokenizer import HFTokenizer
 from src.config import EnvConfig, GeneralConfig
@@ -53,6 +54,12 @@ if __name__ == "__main__":
             "tokenizer_model_name": "bert-base-uncased",
             "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/bert",
             "checkpoint_name": "BERT-epoch02-val_map31.0000.ckpt"
+        },
+        "RoBERTa":{
+            "model_class": RoBERTa,
+            "tokenizer_model_name": "roberta-base",
+            "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/roberta",
+            "checkpoint_name": "RoBERTa-epoch03-val_map31.0000.ckpt"
         },
     }
 
