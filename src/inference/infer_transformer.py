@@ -13,6 +13,31 @@ from scripts.make_processed_data_v001 import ensure_processed_data_exists
 from src.utils.kaggle_utils import load_kagglehub_model
 from src.utils.prediction_utils import predict_top3
 
+# Model configurations
+MODELS={
+    "BERT":{
+        "model_class": BERT,
+        "tokenizer_model_name": "bert-base-uncased",
+        "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/bert",
+        # "checkpoint_name": "BERT-epoch02-val_map31.0000.ckpt", # Using train_test_split
+        "checkpoint_name": "BERT-epoch02-val_map30.9950.ckpt" # Using StratifiedGroupKFold split
+    },
+    "RoBERTa":{
+        "model_class": RoBERTa,
+        "tokenizer_model_name": "roberta-base",
+        "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/roberta",
+        # "checkpoint_name": "RoBERTa-epoch03-val_map31.0000.ckpt" # Using train_test_split
+        "checkpoint_name": "RoBERTa-epoch04-val_map31.0000.ckpt" # Using StratifiedGroupKFold split
+    },
+    "DeBERTa_v3_base":{
+        "model_class": DeBERTa_v3_base,
+        "tokenizer_model_name": "microsoft/deberta-v3-base",
+        "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/deberta_v3_base",
+        "checkpoint_name": "DeBERTa_v3_base-epoch05-val_map30.9901.ckpt"
+    },
+}
+
+
 def infer_transformer(model_handle, checkpoint_name, model_class, tokenizer_model_name):
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -48,29 +73,6 @@ def infer_transformer(model_handle, checkpoint_name, model_class, tokenizer_mode
     print(f"Submission file created at: {Path(EnvConfig.SUBMISSION_DIR) / 'submission.csv'}")
 
 if __name__ == "__main__":
-
-    MODELS={
-        "BERT":{
-            "model_class": BERT,
-            "tokenizer_model_name": "bert-base-uncased",
-            "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/bert",
-            # "checkpoint_name": "BERT-epoch02-val_map31.0000.ckpt", # Using train_test_split
-            "checkpoint_name": "BERT-epoch02-val_map30.9950.ckpt" # Using StratifiedGroupKFold split
-        },
-        "RoBERTa":{
-            "model_class": RoBERTa,
-            "tokenizer_model_name": "roberta-base",
-            "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/roberta",
-            # "checkpoint_name": "RoBERTa-epoch03-val_map31.0000.ckpt" # Using train_test_split
-            "checkpoint_name": "RoBERTa-epoch04-val_map31.0000.ckpt" # Using StratifiedGroupKFold split
-        },
-        "DeBERTa_v3_base":{
-            "model_class": DeBERTa_v3_base,
-            "tokenizer_model_name": "microsoft/deberta-v3-base",
-            "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/deberta_v3_base",
-            "checkpoint_name": "DeBERTa_v3_base-epoch05-val_map30.9901.ckpt"
-        },
-    }
 
     #get cli arguments
     parser = argparse.ArgumentParser()
