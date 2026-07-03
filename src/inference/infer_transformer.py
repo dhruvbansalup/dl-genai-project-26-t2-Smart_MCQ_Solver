@@ -5,6 +5,7 @@ from pathlib import Path
 
 from src.models.transformers.bert import BERT
 from src.models.transformers.roberta import RoBERTa
+from src.models.transformers.deberta_v3_base import DeBERTa_v3_base
 from src.datamodules.mcq_datamodule import MCQDataModule
 from src.tokenizers.hf_tokenizer import HFTokenizer
 from src.config import EnvConfig, GeneralConfig
@@ -62,6 +63,12 @@ if __name__ == "__main__":
             "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/roberta",
             # "checkpoint_name": "RoBERTa-epoch03-val_map31.0000.ckpt" # Using train_test_split
             "checkpoint_name": "RoBERTa-epoch04-val_map31.0000.ckpt" # Using StratifiedGroupKFold split
+        },
+        "DeBERTa_v3_base":{
+            "model_class": DeBERTa_v3_base,
+            "tokenizer_model_name": "microsoft/deberta-v3-base",
+            "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/deberta_v3_base",
+            "checkpoint_name": "DeBERTa_v3_base-epoch05-val_map30.9901.ckpt"
         },
     }
 
