@@ -53,13 +53,15 @@ if __name__ == "__main__":
             "model_class": BERT,
             "tokenizer_model_name": "bert-base-uncased",
             "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/bert",
-            "checkpoint_name": "BERT-epoch02-val_map31.0000.ckpt"
+            # "checkpoint_name": "BERT-epoch02-val_map31.0000.ckpt", # Using train_test_split
+            "checkpoint_name": "BERT-epoch02-val_map30.9950.ckpt" # Using StratifiedGroupKFold split
         },
         "RoBERTa":{
             "model_class": RoBERTa,
             "tokenizer_model_name": "roberta-base",
             "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/roberta",
-            "checkpoint_name": "RoBERTa-epoch03-val_map31.0000.ckpt"
+            # "checkpoint_name": "RoBERTa-epoch03-val_map31.0000.ckpt" # Using train_test_split
+            "checkpoint_name": "RoBERTa-epoch04-val_map31.0000.ckpt" # Using StratifiedGroupKFold split
         },
     }
 
