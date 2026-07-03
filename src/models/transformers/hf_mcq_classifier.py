@@ -1,5 +1,6 @@
 from transformers import AutoModel
 from torch import nn
+import torch
 
 from src.models.base_model import BaseModel
 
@@ -18,7 +19,7 @@ class HFMCQClassifier(BaseModel):
         self.model_name=model_name
 
         # Init the model from huggingface
-        self.encoder=AutoModel.from_pretrained(self.model_name)
+        self.encoder=AutoModel.from_pretrained(self.model_name, torch_dtype=torch.float32)
 
         # Set the encoder to train mode (by default, HF models are in eval mode)
         self.encoder.train()
@@ -51,7 +52,7 @@ class HFMCQClassifier(BaseModel):
         outputs = self.encoder(input_ids=input_ids, attention_mask=attention_mask)
 
         # get the pooled output (B*5, E)
-        pooled=outputs.pooler_output
+        pooled=outputs.last_hidden_state[:, 0, :]
 
         # Final Classifier (B*5, E) -> (B*5, 1)
         logits=self.classifier(pooled)
