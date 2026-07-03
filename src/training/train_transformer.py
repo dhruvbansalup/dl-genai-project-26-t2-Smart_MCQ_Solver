@@ -8,6 +8,7 @@ from src.datamodules.mcq_datamodule import MCQDataModule
 from src.training.trainer import train
 from src.models.transformers.bert import BERT
 from src.models.transformers.roberta import RoBERTa
+from src.models.transformers.deberta_v3_base import DeBERTa_v3_base
 
 def train_transformer(model_class, tokenizer_model_name, log=False, uploadToKaggle=False):
     ensure_processed_data_exists()
@@ -40,6 +41,7 @@ if __name__ == "__main__":
         # model_name: (model_class, tokenizer_model_name)
         "BERT":(BERT, "bert-base-uncased"),
         "RoBERTa":(RoBERTa, "roberta-base"),
+        "DeBERTa_v3_base":(DeBERTa_v3_base, "microsoft/deberta-v3-base"),
     }
 
     #get cli arguments
