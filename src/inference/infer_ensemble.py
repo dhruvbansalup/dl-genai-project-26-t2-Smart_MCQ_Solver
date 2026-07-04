@@ -48,9 +48,24 @@ def infer_ensemble():
     test_df=pd.read_parquet(f"{EnvConfig.PROCESSED_DATA_DIR}/test_v001.parquet")
 
     #Getting prediction logits from each model
-    bert_logits = get_logits_from_transformer_model(**models_config["BERT"], test_df=test_df, device=device)
-    roberta_logits = get_logits_from_transformer_model(**models_config["RoBERTa"], test_df=test_df, device=device)
-    deberta_logits = get_logits_from_transformer_model(**models_config["DeBERTa_v3_base"], test_df=test_df, device=device)
+    bert_logits=get_logits_from_transformer_model(
+        model_handle=models_config["BERT"]["model_handle"],
+        checkpoint_name=models_config["BERT"]["checkpoint_name"],
+        model_class=models_config["BERT"]["model_class"],
+        tokenizer_model_name=models_config["BERT"]["tokenizer_model_name"],
+        test_df=test_df, device=device)
+    roberta_logits = get_logits_from_transformer_model(
+        model_handle=models_config["RoBERTa"]["model_handle"],
+        checkpoint_name=models_config["RoBERTa"]["checkpoint_name"],
+        model_class=models_config["RoBERTa"]["model_class"],
+        tokenizer_model_name=models_config["RoBERTa"]["tokenizer_model_name"],
+        test_df=test_df, device=device)
+    deberta_logits = get_logits_from_transformer_model(
+        model_handle=models_config["DeBERTa_v3_base"]["model_handle"],
+        checkpoint_name=models_config["DeBERTa_v3_base"]["checkpoint_name"],
+        model_class=models_config["DeBERTa_v3_base"]["model_class"],
+        tokenizer_model_name=models_config["DeBERTa_v3_base"]["tokenizer_model_name"],
+        test_df=test_df, device=device)
 
     #Converting to probabilities
     bert_probs = torch.softmax(bert_logits, dim=1)
