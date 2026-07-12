@@ -24,6 +24,14 @@ class MCQDataset(Dataset):
 
         prompt=row['prompt']
 
+        # In case of RAG, use context instead of prompt
+        context = row.get("context", "")
+        if context:
+            prompt = (
+                f"Context:\n{context}\n\n"
+                f"Question:\n{prompt}"
+            )
+
         options=[row[o] for o in self.LABEL_MAP.keys()]
 
         x=self.tokenizer.encode_batch(prompt, options, max_length=self.max_length)

@@ -14,6 +14,10 @@ class GeneralConfig:
     # From EDA, max len of prompt or option is 118 words
     MAX_LENGTH=120
 
+class RAGConfig:
+    MAX_LENGTH=512 # Since RAG needs to handle prompt+context, we will use 1024 as max length for RAG model
+
+
 class WandbConfig:
     ENTITY="24f1001707-dl-genai-project"
     PROJECT_NAME="24f1001707-t22026"

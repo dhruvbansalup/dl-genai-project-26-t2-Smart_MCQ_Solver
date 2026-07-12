@@ -7,7 +7,7 @@ from pytorch_lightning.loggers import WandbLogger
 from src.config import GeneralConfig, EnvConfig, WandbConfig
 from src.utils.time_utils import time_now_ist
 
-def train(DATA_MODULE, MODEL,max_epochs, log=True, upload_kaggle=True):
+def train(DATA_MODULE, MODEL,max_epochs, log=True, upload_kaggle=True, experiment_suffix=None, config_logs=None):
 
     # setting for matrix multiplication for better performance
     torch.set_float32_matmul_precision('high')
@@ -16,6 +16,8 @@ def train(DATA_MODULE, MODEL,max_epochs, log=True, upload_kaggle=True):
     pl.seed_everything(GeneralConfig.SEED)
 
     model_class_name=MODEL.__class__.__name__
+    if experiment_suffix:
+        model_class_name += f"_{experiment_suffix}"
 
     #Model Checkpointing
     checkpoint_callbacks = [
@@ -46,6 +48,9 @@ def train(DATA_MODULE, MODEL,max_epochs, log=True, upload_kaggle=True):
             # avoid conflicts with other runs
             id=f"{model_class_name}-{time_now_ist(cleaned=True)}-{secrets.token_hex(2)}",
         )
+
+    if (wandb_logger and config_logs):
+        wandb_logger.log_hyperparams(config_logs)
 
     trainer = pl.Trainer(
         max_epochs=max_epochs,
