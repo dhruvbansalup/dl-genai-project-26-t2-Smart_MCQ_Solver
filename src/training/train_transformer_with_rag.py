@@ -12,7 +12,7 @@ from src.models.transformers.bert import BERT
 from src.models.transformers.roberta import RoBERTa
 from src.models.transformers.deberta_v3_base import DeBERTa_v3_base
 
-def train_transformer_with_rag(model_class, tokenizer_model_name, log=False, uploadToKaggle=False):
+def train_transformer_with_rag(model_class, tokenizer_model_name, log=False, uploadToKaggle=False, batch_size=4):
     ensure_processed_data_exists()
 
     # Loading dataset
@@ -38,7 +38,7 @@ def train_transformer_with_rag(model_class, tokenizer_model_name, log=False, upl
         tokenizer=tokenizer,
         max_length=RAGConfig.MAX_LENGTH,
         rag_pipeline=rag_pipeline,
-        batch_size=4,
+        batch_size=batch_size,
         num_workers=4,
     )
 
@@ -89,8 +89,9 @@ if __name__ == "__main__":
     parser.add_argument("--model", type=str, choices=MODELS.keys(), required=True)
     parser.add_argument("--log", type=bool, default=False)
     parser.add_argument("--uploadToKaggle", type=bool, default=False)
+    parser.add_argument("--batch_size", type=int, default=4)
     args = parser.parse_args()
 
     model_class, tokenizer_model_name=MODELS[args.model]
 
-    train_transformer_with_rag(model_class=model_class, tokenizer_model_name=tokenizer_model_name, log=args.log, uploadToKaggle=args.uploadToKaggle)
+    train_transformer_with_rag(model_class=model_class, tokenizer_model_name=tokenizer_model_name, log=args.log, uploadToKaggle=args.uploadToKaggle, batch_size=args.batch_size)

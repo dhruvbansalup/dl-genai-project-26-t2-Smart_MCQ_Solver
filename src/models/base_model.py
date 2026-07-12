@@ -35,7 +35,7 @@ class BaseModel(pl.LightningModule, ABC):
     @abstractmethod
     def forward(self, x):
         pass
-    
+
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr)
         return optimizer
@@ -45,7 +45,7 @@ class BaseModel(pl.LightningModule, ABC):
         y_hat = self(x) # Forward pass
 
         loss = F.cross_entropy(y_hat, y)
-        self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
+        self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=True, logger=True, sync_dist=True)
         return loss
 
     def on_train_epoch_start(self):
@@ -66,7 +66,7 @@ class BaseModel(pl.LightningModule, ABC):
         y_hat = self(x) # Forward pass
 
         loss = F.cross_entropy(y_hat, y)
-        self.log("val_loss", loss, on_step=False, on_epoch=True, prog_bar=True, logger=True)
+        self.log("val_loss", loss, on_step=False, on_epoch=True, prog_bar=True, logger=True, sync_dist=True)
 
         preds=torch.argmax(y_hat, dim=1)
 
@@ -87,14 +87,14 @@ class BaseModel(pl.LightningModule, ABC):
     def on_validation_epoch_end(self):
 
         val_accuracy=self.val_accuracy.compute()
-        self.log("val_accuracy", val_accuracy, prog_bar=True, logger=True)
+        self.log("val_accuracy", val_accuracy, prog_bar=True, logger=True, sync_dist=True)
         val_accuracy3=self.val_accuracy3.compute()
-        self.log("val_accuracy3", val_accuracy3, prog_bar=True, logger=True)
+        self.log("val_accuracy3", val_accuracy3, prog_bar=True, logger=True, sync_dist=True)
 
         #MAP@3
         if self.map3_count > 0:
             val_map3 = self.map3_sum / self.map3_count
-            self.log("val_map3", val_map3, prog_bar=True, logger=True)
+            self.log("val_map3", val_map3, prog_bar=True, logger=True, sync_dist=True)
 
         #Reset metrics
         self.val_accuracy.reset()
@@ -105,4 +105,4 @@ class BaseModel(pl.LightningModule, ABC):
         # Logging duration
         if self.val_epoch_start_time is not None:
             epoch_duration = time.time() - self.val_epoch_start_time
-            self.log("val_epoch_duration", epoch_duration, prog_bar=False, logger=True)
+            self.log("val_epoch_duration", epoch_duration, prog_bar=False, logger=True, sync_dist=True)

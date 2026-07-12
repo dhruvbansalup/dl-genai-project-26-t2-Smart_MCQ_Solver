@@ -24,6 +24,11 @@ class HFMCQClassifier(BaseModel):
         # Set the encoder to train mode (by default, HF models are in eval mode)
         self.encoder.train()
 
+        # Freeze the pooler layer if it exists, as we don't want to train it and it causes DDP issues (2 GPUs)
+        if hasattr(self.encoder, "pooler") and self.encoder.pooler is not None:
+            for p in self.encoder.pooler.parameters():
+                p.requires_grad = False
+
         # getting transformer output embedding size for classifier input
         hidden_size=self.encoder.config.hidden_size
 
