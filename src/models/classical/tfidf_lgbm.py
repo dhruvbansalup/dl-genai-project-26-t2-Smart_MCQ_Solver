@@ -1,81 +1,140 @@
-
-import pandas as pd
+import json
+import joblib
 import numpy as np
-
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
 import lightgbm as lgbm
 from pathlib import Path
 
-from src.config import EnvConfig
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.preprocessing import LabelEncoder
 
-def load_processed_data(version="v001"):
-    train_df = pd.read_parquet(Path(EnvConfig.PROCESSED_DATA_DIR) / f"train_{version}.parquet")
-    test_df = pd.read_parquet(Path(EnvConfig.PROCESSED_DATA_DIR) / f"test_{version}.parquet")
-    return train_df, test_df
+class TFIDFLightGBM:
+    """
+    Baseline model TF-IDF + LightGBM
+    """
+    def __init__(self,
+        lr=0.1,
+        n_estimators=100,
+        max_features=30000,
+        ngram_range=(1,2),
+        min_df=5,
+        max_df=0.9,
+    ):
+        self.lr = lr
+        self.n_estimators = n_estimators
+        self.max_features = max_features
+        self.ngram_range = ngram_range
+        self.min_df = min_df
+        self.max_df = max_df
 
-def preprocessing(df):
-    #Combine prompt and options into a single text column
-    for opt in ["A","B","C","D","E"]:
-        df["prompt"] += "[SEP]" +opt+": " + df[opt].fillna("")
+        self.LabelEncoder = LabelEncoder()
+
+        self.vectorizer = TfidfVectorizer(
+            max_features=self.max_features,
+            ngram_range=self.ngram_range,
+            min_df=self.min_df,
+            max_df=self.max_df
+        )
     
-    if "answer" in df.columns:
-        return df[["prompt","answer"]]
-    else:
-        return df[["prompt"]]
+        self.model= lgbm.LGBMClassifier(
+            n_estimators=self.n_estimators,
+            learning_rate=self.lr
+        )
 
-def tfidf_lgbm():
-    train_df, test_df = load_processed_data("v001")
+    def _build_prompt_forMCQ(self, df):
+        #Combine prompt and options into a single text column
+        df=df.copy()
+        for opt in ["A","B","C","D","E"]:
+          df["prompt"] += "[SEP]" +opt+": " + df[opt].fillna("")
 
-    train_df = preprocessing(train_df)
-    test_df = preprocessing(test_df)
+        if "answer" in df.columns:
+            return df[["prompt","answer"]]
+        else:
+            return df[["prompt"]]
 
-    #Encode labels
-    le= LabelEncoder()
-    train_df["answer"] = pd.Series(le.fit_transform(train_df["answer"]))
-    
-    #TF-IDF Vectorization
-    tfidf = TfidfVectorizer(max_features=30000, ngram_range=(1,2), min_df=5, max_df=0.9)
-    
-    X_train = tfidf.fit_transform(train_df["prompt"])
-    X_test = tfidf.transform(test_df["prompt"])
-    
-    print("TF-IDF Vectorization Completed")
-    
-    #Model
-    model = lgbm.LGBMClassifier(n_estimators=100, learning_rate=0.1)
+    def fit(self, train_df):
+        """
+        Training
+        """
+        # Preprocess the DataFrame
+        processed_df = self._build_prompt_forMCQ(train_df)
+        texts = processed_df["prompt"]
+        labels = processed_df["answer"]
 
-    # supressing lightgbm warnings
-    import warnings
-    warnings.filterwarnings("ignore", category=UserWarning, module="lightgbm")
+        #encode labels
+        y=self.LabelEncoder.fit_transform(labels)
 
-    #Train LightGBM
-    y_train = train_df["answer"]
-    model.fit(X_train, y_train)
+        #vectorize texts
+        X=self.vectorizer.fit_transform(texts)
 
-    print("Model Training Completed")
+        #train the model
+        self.model.fit(X, y)
 
-    #Get Probabilities
-    probabilities = np.asanyarray(model.predict_proba(X_test))
+        return self
 
-    # converting to labels top3
-    labels = le.classes_
-    predictions = []
-    for p in probabilities:
-        top3_indices = np.argsort(p)[-3:][::-1]
-        predictions.append(" ".join(labels[top3_indices]))
+    def predict_top3(self, test_df):
+        # Preprocess the DataFrame
+        prompts_df = self._build_prompt_forMCQ(test_df)
 
-    #Submission File
-    submission_df = pd.DataFrame({
-        "ID": test_df.index+1,
-        "Prediction": predictions
-    })
+        #vectorize texts
+        X=self.vectorizer.transform(prompts_df['prompt'])
 
-    submission_df.to_csv(Path(EnvConfig.SUBMISSION_DIR) / "submission.csv", index=False)
+        #Get Probabilities
+        probabilities = np.asanyarray(self.model.predict_proba(X))
 
-    print("Submission File Created")
+        # converting to labels top3
+        labels = self.LabelEncoder.classes_
+        predictions = []
+        for p in probabilities:
+            top3_indices = np.argsort(p)[-3:][::-1]
+            predictions.append(" ".join(labels[top3_indices]))
+
+        return predictions
 
 
-if __name__ == "__main__":
-    tfidf_lgbm()
+    def save(self, save_dir):
+        """
+        Helper to save the model, vectorizer and label encoder
+        """
+        save_dir = Path(save_dir)
+        save_dir.mkdir(parents=True, exist_ok=True) #sure dir exists
+
+        joblib.dump(self.model, save_dir / f"{self.__class__.__name__}_model.pkl")
+        joblib.dump(self.vectorizer, save_dir / f"{self.__class__.__name__}_vectorizer.pkl")
+        joblib.dump(self.LabelEncoder, save_dir / f"{self.__class__.__name__}_label_encoder.pkl")
+        with open(save_dir / f"{self.__class__.__name__}_config.json", "w") as f:
+            json.dump(self.config, f, indent=4)
+
+        print(f"Model, vectorizer and label encoder saved to {save_dir} successfully.")
+
+    @classmethod
+    def load(cls, model_dir):
+        """
+        Helper to load the saved model, vectorizer and label encoder to get instance.
+        """
+        model_dir = Path(model_dir)
+
+        model = joblib.load(model_dir / f"{cls.__name__}_model.pkl")
+        vectorizer = joblib.load(model_dir / f"{cls.__name__}_vectorizer.pkl")
+        label_encoder = joblib.load(model_dir / f"{cls.__name__}_label_encoder.pkl")
+        with open(model_dir / f"{cls.__name__}_config.json", "r") as f:
+            config = json.load(f)
+
+        instance = cls(**config)
+        instance.model = model
+        instance.vectorizer = vectorizer
+        instance.LabelEncoder = label_encoder
+        return instance
+
+    @property
+    def config(self):
+        """
+        Config to log hyperparameters
+        """
+        return {
+            "lr": self.lr,
+            "n_estimators": self.n_estimators,
+            "max_features": self.max_features,
+            "ngram_range": self.ngram_range,
+            "min_df": self.min_df,
+            "max_df": self.max_df
+        }

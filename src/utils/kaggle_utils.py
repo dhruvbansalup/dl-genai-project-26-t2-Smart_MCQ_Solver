@@ -60,3 +60,35 @@ def load_kagglehub_model(model_handle, ckpt_name, model_class, load_to_device):
     print ("Model Loaded Successfully!")
 
     return model
+
+def upload_model_directory_to_kagglehub(local_model_dir, variant_name):
+    try:
+
+        handle = f"{KaggleConfig.KAGGLE_USERNAME}/{KaggleConfig.KAGGLEHUB_MODEL_REPO}/pytorch/{variant_name}"
+
+        model_ref = kagglehub.model_upload(
+            handle=handle,
+            local_model_dir=local_model_dir,
+            version_notes=f"{variant_name} model uploaded at {time_now_ist()}",
+        )
+
+        print(f"Model {variant_name} uploaded to Kagglehub successfully!")
+
+    except Exception as e:
+        print(f"Error uploading model directory to Kagglehub: {e}")
+
+
+def download_model_directory_from_kagglehub(model_handle):
+    download_dir = os.path.join("downloads", model_handle.split("/")[-1].lower())
+
+    try:
+        print(f"Downloading model from KaggleHub: {model_handle}")
+        model_dir = kagglehub.model_download(model_handle,output_dir=download_dir, force_download=True)
+
+        print(f"Model directory downloaded to: {model_dir}")
+
+    except Exception as e:
+        print(f"Error downloading model from KaggleHub: {e}")
+        model_dir = None
+
+    return model_dir
