@@ -1,7 +1,7 @@
 import torch.nn as nn
 
 from src.models.base_model import BaseModel
-from src.models.layers.attention_pooling import AttentionPooling
+from src.models.lstm.attention_pooling import AttentionPooling
 from src.config import GeneralConfig
 
 class BiLSTM01(BaseModel):
