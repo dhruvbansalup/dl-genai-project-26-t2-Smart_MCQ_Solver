@@ -20,7 +20,8 @@ MODELS={
         "tokenizer_model_name": "bert-base-uncased",
         "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/bert",
         # "checkpoint_name": "BERT-epoch02-val_map31.0000.ckpt", # Using train_test_split
-        "checkpoint_name": "BERT-epoch02-val_map30.9950.ckpt" # Using StratifiedGroupKFold split
+        # "checkpoint_name": "BERT-epoch02-val_map30.9950.ckpt" # Using StratifiedGroupKFold split
+        "checkpoint_name": "BERT-epoch04-val_map30.8356.ckpt" # Using Data v002
     },
     "RoBERTa":{
         "model_class": RoBERTa,
