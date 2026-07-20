@@ -8,7 +8,7 @@ from pathlib import Path
 from src.config import EnvConfig, WandbConfig
 from src.utils.time_utils import time_now_ist
 from src.utils.kaggle_utils import upload_model_directory_to_kagglehub
-from scripts.make_processed_data_v001 import ensure_processed_data_exists
+from scripts.make_processed_data_v001 import ensure_processed_data_exists_v001
 
 # supressing lightgbm warnings
 
@@ -17,7 +17,7 @@ warnings.filterwarnings("ignore", category=UserWarning, module="lightgbm")
 
 def train_classical_tfidf_lgbm(log=False, uploadToKaggle=False):
     # Load processed data
-    ensure_processed_data_exists()
+    ensure_processed_data_exists_v001()
     train_df = pd.read_parquet(f"{EnvConfig.PROCESSED_DATA_DIR}/train_v001.parquet")
 
     model=TFIDFLightGBM()

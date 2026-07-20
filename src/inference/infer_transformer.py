@@ -9,7 +9,7 @@ from src.models.transformers.deberta_v3_base import DeBERTa_v3_base
 from src.datamodules.mcq_datamodule import MCQDataModule
 from src.tokenizers.hf_tokenizer import HFTokenizer
 from src.config import EnvConfig, GeneralConfig
-from scripts.make_processed_data_v001 import ensure_processed_data_exists
+from scripts.make_processed_data_v001 import ensure_processed_data_exists_v001
 from src.utils.kaggle_utils import load_kagglehub_model
 from src.utils.prediction_utils import predict_top3
 
@@ -47,7 +47,7 @@ def infer_transformer(model_handle, checkpoint_name, model_class, tokenizer_mode
     # Get tokenized test data
     tokenizer = HFTokenizer(model_name=tokenizer_model_name)
 
-    ensure_processed_data_exists()
+    ensure_processed_data_exists_v001()
     test_df=pd.read_parquet(f"{EnvConfig.PROCESSED_DATA_DIR}/test_v001.parquet")
     datamodule = MCQDataModule(
         df=None,

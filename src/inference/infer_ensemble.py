@@ -2,7 +2,7 @@ import torch
 import pandas as pd
 from pathlib import Path
 
-from scripts.make_processed_data_v001 import ensure_processed_data_exists
+from scripts.make_processed_data_v001 import ensure_processed_data_exists_v001
 from src.config import EnvConfig, GeneralConfig
 from src.tokenizers.hf_tokenizer import HFTokenizer
 from src.utils.kaggle_utils import load_kagglehub_model
@@ -44,7 +44,7 @@ def infer_ensemble():
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     #Loading Data
-    ensure_processed_data_exists()
+    ensure_processed_data_exists_v001()
     test_df=pd.read_parquet(f"{EnvConfig.PROCESSED_DATA_DIR}/test_v001.parquet")
 
     #Getting prediction logits from each model

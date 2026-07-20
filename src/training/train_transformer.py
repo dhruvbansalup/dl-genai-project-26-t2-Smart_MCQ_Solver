@@ -2,7 +2,7 @@ import argparse
 import pandas as pd
 
 from src.config import EnvConfig, GeneralConfig
-from scripts.make_processed_data_v001 import ensure_processed_data_exists
+from scripts.make_processed_data_v001 import ensure_processed_data_exists_v001
 from src.tokenizers.hf_tokenizer import HFTokenizer
 from src.datamodules.mcq_datamodule import MCQDataModule
 from src.training.trainer import train
@@ -11,7 +11,7 @@ from src.models.transformers.roberta import RoBERTa
 from src.models.transformers.deberta_v3_base import DeBERTa_v3_base
 
 def train_transformer(model_class, tokenizer_model_name, log=False, uploadToKaggle=False):
-    ensure_processed_data_exists()
+    ensure_processed_data_exists_v001()
 
     # Loading dataset
     train_df = pd.read_parquet(f"{EnvConfig.PROCESSED_DATA_DIR}/train_v001.parquet")

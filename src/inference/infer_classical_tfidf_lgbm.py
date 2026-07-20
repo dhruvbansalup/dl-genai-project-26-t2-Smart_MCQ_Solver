@@ -5,7 +5,7 @@ from pathlib import Path
 from src.config import EnvConfig
 from src.models.classical.tfidf_lgbm import TFIDFLightGBM
 from src.utils.kaggle_utils import download_model_directory_from_kagglehub
-from scripts.make_processed_data_v001 import ensure_processed_data_exists
+from scripts.make_processed_data_v001 import ensure_processed_data_exists_v001
 
 
 MODEL_HANDLE="dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pytorch/classical_tfidf_lgbm"
@@ -23,7 +23,7 @@ def infer_classical_tfidf_lgbm():
     model=TFIDFLightGBM.load(model_dir=model_dir)
 
     #Loading Data
-    ensure_processed_data_exists()
+    ensure_processed_data_exists_v001()
     test_df=pd.read_parquet(f"{EnvConfig.PROCESSED_DATA_DIR}/test_v001.parquet")
 
     #Get predictions

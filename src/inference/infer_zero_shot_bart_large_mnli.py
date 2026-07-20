@@ -5,7 +5,7 @@ from tqdm import tqdm
 
 from src.models.zeroshot.bart_large_mnli import BartLargeMNLI
 from src.config import EnvConfig
-from scripts.make_processed_data_v001 import ensure_processed_data_exists
+from scripts.make_processed_data_v001 import ensure_processed_data_exists_v001
 
 def infer_zero_shot_bart_large_mnli():
     # Loading model
@@ -13,7 +13,7 @@ def infer_zero_shot_bart_large_mnli():
     print("Model Loaded Successfully!")
 
     # Loading test data
-    ensure_processed_data_exists()
+    ensure_processed_data_exists_v001()
     test_df = pd.read_parquet(f"{EnvConfig.PROCESSED_DATA_DIR}/test_v001.parquet")
     test_dataset=Dataset.from_pandas(test_df)
 

@@ -6,11 +6,11 @@ from src.preprocessing.formatting import format_mcq_data
 from src.config import EnvConfig
 
 def create_processed_data(raw_csv_path, processed_parquet_path):
-    
+
     df = pd.read_csv(raw_csv_path)
     df = format_mcq_data(df)
     df.to_parquet(processed_parquet_path, index=False)
-    
+
 def main():
     train_raw_path = f"{EnvConfig.RAW_DATA_DIR}/train.csv"
     test_raw_path = f"{EnvConfig.RAW_DATA_DIR}/test.csv"
@@ -29,7 +29,7 @@ def main():
 
     print("Processed data created successfully.")
 
-def ensure_processed_data_exists():
+def ensure_processed_data_exists_v001():
     train_processed_path = f"{EnvConfig.PROCESSED_DATA_DIR}/train_v001.parquet"
     test_processed_path = f"{EnvConfig.PROCESSED_DATA_DIR}/test_v001.parquet"
 
@@ -40,4 +40,4 @@ def ensure_processed_data_exists():
         print("Processed data already exists.")
 
 if __name__ == "__main__":
-    ensure_processed_data_exists()
+    main()
