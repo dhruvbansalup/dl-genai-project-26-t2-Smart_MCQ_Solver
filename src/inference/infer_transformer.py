@@ -28,13 +28,15 @@ MODELS={
         "tokenizer_model_name": "roberta-base",
         "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/roberta",
         # "checkpoint_name": "RoBERTa-epoch03-val_map31.0000.ckpt" # Using train_test_split
-        "checkpoint_name": "RoBERTa-epoch04-val_map31.0000.ckpt" # Using StratifiedGroupKFold split
+        # "checkpoint_name": "RoBERTa-epoch04-val_map31.0000.ckpt" # Using StratifiedGroupKFold split
+        "checkpoint_name": "RoBERTa-epoch05-val_map30.8433.ckpt" # Using Data v002
     },
     "DeBERTa_v3_base":{
         "model_class": DeBERTa_v3_base,
         "tokenizer_model_name": "microsoft/deberta-v3-base",
         "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/deberta_v3_base",
-        "checkpoint_name": "DeBERTa_v3_base-epoch05-val_map30.9901.ckpt"
+        # "checkpoint_name": "DeBERTa_v3_base-epoch05-val_map30.9901.ckpt"
+        "checkpoint_name": "DeBERTa_v3_base-epoch03-val_map30.9014.ckpt" # Using Data v002
     },
 }
 
