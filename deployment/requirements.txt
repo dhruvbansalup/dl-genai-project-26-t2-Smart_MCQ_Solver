@@ -1,0 +1,9 @@
+gradio
+torch
+spaces
+transformers
+pytorch-lightning
+huggingface_hub
+python-dotenv
+pandas
+scikit-learn

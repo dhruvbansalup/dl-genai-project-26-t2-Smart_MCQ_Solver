@@ -1,0 +1,43 @@
+name: Deploy to Hugging Face Space
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install the hf CLI
+        run: |
+          curl -LsSf https://hf.co/cli/install.sh | bash
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Prepare deployment directory
+        run: |
+          mkdir build
+
+          # Files
+          cp -r deployment/. build/
+          cp -r src build/
+          cp deployment/requirements.txt build/requirements.txt
+
+      - name: Upload to Hugging Face Space
+        env:
+          HF_OIDC_RESOURCE: spaces/dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver
+        run: |
+          hf upload \
+            dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver \
+            build/. \
+            --repo-type space \
+            --commit-message "Deploying to Hugging Face Space from GitHub Actions"
