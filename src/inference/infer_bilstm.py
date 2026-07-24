@@ -14,7 +14,8 @@ def infer_bilstm():
     device = "cuda" if torch.cuda.is_available() else "cpu"
     handle = "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/bilstm01"
     # checkpoint_name="BiLSTM01-epoch05-val_map30.9767-v1.ckpt" # Using train_test_split
-    checkpoint_name="BiLSTM01-epoch05-val_map30.9796.ckpt" # Using StratifiedGroupKFold split
+    # checkpoint_name="BiLSTM01-epoch05-val_map30.9796.ckpt" # Using StratifiedGroupKFold split
+    checkpoint_name="BiLSTM01-epoch10-val_map30.7174.ckpt" # data v002
 
     #Loading Model
     model=load_kagglehub_model(model_handle=handle, ckpt_name=checkpoint_name, model_class=BiLSTM01, load_to_device=device)
