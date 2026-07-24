@@ -21,7 +21,8 @@ MODELS={
         "model_class": BERT,
         "tokenizer_model_name": "bert-base-uncased",
         "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/bert",
-        "checkpoint_name": "BERT_RAG-epoch04-val_map30.9938.ckpt",
+        # "checkpoint_name": "BERT_RAG-epoch04-val_map30.9938.ckpt",
+        "checkpoint_name": "BERT_RAG-epoch05-val_map30.8724.ckpt", #data v002
 
         # RAG specific configurations
         "rag_embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
@@ -34,7 +35,8 @@ MODELS={
         "model_class": RoBERTa,
         "tokenizer_model_name": "roberta-base",
         "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/roberta",
-        "checkpoint_name": "RoBERTa_RAG-epoch03-val_map31.0000.ckpt",
+        # "checkpoint_name": "RoBERTa_RAG-epoch03-val_map31.0000.ckpt",
+        "checkpoint_name": "RoBERTa_RAG-epoch04-val_map30.8405.ckpt", #data v002
 
         # RAG specific configurations
         "rag_embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
@@ -46,7 +48,8 @@ MODELS={
         "model_class": DeBERTa_v3_base,
         "tokenizer_model_name": "microsoft/deberta-v3-base",
         "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/deberta_v3_base",
-        "checkpoint_name": "DeBERTa_v3_base_RAG-epoch02-val_map30.9773.ckpt",
+        # "checkpoint_name": "DeBERTa_v3_base_RAG-epoch02-val_map30.9773.ckpt",
+        "checkpoint_name": "DeBERTa_v3_base_RAG-epoch02-val_map30.8624.ckpt",
 
         # RAG specific configurations
         "rag_embedding_model": "sentence-transformers/all-MiniLM-L6-v2",

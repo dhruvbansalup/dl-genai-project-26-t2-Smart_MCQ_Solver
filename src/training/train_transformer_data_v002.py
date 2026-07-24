@@ -37,6 +37,7 @@ def train_transformer(model_class, tokenizer_model_name, log=False, uploadToKagg
     # Training Configuration
     config_logs={
         "data_version":"v002",
+        "pipeline":"Standard",
     }
 
     # Train the model
