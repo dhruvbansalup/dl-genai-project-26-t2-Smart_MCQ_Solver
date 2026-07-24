@@ -3,9 +3,12 @@
 from transformers import AutoModel, AutoTokenizer
 from torch import nn
 import torch
+import pytorch_lightning as pl
 
-class BERT(nn.Module):
-    def __init__(self):
+class BERT(pl.LightningModule):
+    def __init__(
+            self,
+    ):
         super().__init__()
 
         # Init the model from huggingface
@@ -48,19 +51,19 @@ class BERT(nn.Module):
 
         return logits
 
-
 class HFTokenizer:
     def __init__(self, model_name: str):
+        # Downloading pretrained tokenizer from HF
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-    def encode_batch(self, prompt, options):
+    def encode_batch(self, prompt, options, max_length):
 
         encoding=self.tokenizer(
             [prompt]*len(options),
             options,
             truncation=True,
             padding='max_length',
-            max_length=242,
+            max_length=max_length,
             return_attention_mask=True
         )
 

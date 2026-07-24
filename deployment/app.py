@@ -8,8 +8,12 @@ from examples import examples
 @spaces.GPU
 def solve(prompt, a, b, c, d, e):
     options = [a, b, c, d, e]
-    predictions = solver.predict(prompt, options)
-    return predictions
+    top3 = solver.predict(prompt, options)
+
+    return "\n".join(
+        f"{rank}. {label}"
+        for rank, label in enumerate(top3, start=1)
+    )
 
 demo = gr.Interface(
     fn=solve,
@@ -21,7 +25,10 @@ demo = gr.Interface(
         gr.Textbox(label="Option D", placeholder="Enter option D here..."),
         gr.Textbox(label="Option E", placeholder="Enter option E here..."),
     ],
-    outputs=gr.Label(label="Predicted Answers", num_top_classes=3),
+    outputs=gr.Textbox(
+        label="Top 3 Predicted Answers",
+        lines=3
+    ),
     title="Smart MCQ Solver",
     examples=examples,
     cache_examples=False,
