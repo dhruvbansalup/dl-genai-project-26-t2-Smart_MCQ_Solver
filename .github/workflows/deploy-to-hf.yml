@@ -10,18 +10,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    permissions:
-      id-token: write
-      contents: read
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Install the hf CLI
-        run: |
-          curl -LsSf https://hf.co/cli/install.sh | bash
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       - name: Prepare deployment directory
         run: |
@@ -29,15 +20,17 @@ jobs:
 
           # Files
           cp -r deployment/. build/
-          cp -r src build/
-          cp deployment/requirements.txt build/requirements.txt
 
-      - name: Upload to Hugging Face Space
+      - name: Deploy build to Hugging Face
         env:
-          HF_OIDC_RESOURCE: spaces/dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          hf upload \
-            dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver \
-            build/. \
-            --repo-type space \
-            --commit-message "Deploying to Hugging Face Space from GitHub Actions"
+          echo "Token length: ${#HF_TOKEN}"
+          cd build
+          git init -b main
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
+          git remote add hf https://USER:${HF_TOKEN}@huggingface.co/spaces/dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver
+          git add .
+          git commit -m "Deploy from GitHub Actions" || echo "No changes to commit"
+          git push hf main --force

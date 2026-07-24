@@ -1,37 +1,40 @@
 import torch
 from huggingface_hub import hf_hub_download
-
-from src.models.transformers.bert import BERT
-from src.tokenizers.hf_tokenizer import HFTokenizer
+from model import BERT, HFTokenizer
 
 LABELS=["A", "B", "C", "D", "E"]
 
 class Solver:
     def __init__(self):
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-
-        # Download model checkpoint from Hugging Face Hub
-        checkpoint_path = hf_hub_download(
+        # Download model weights from Hugging Face Hub
+        weights_path = hf_hub_download(
             repo_id="dhruvbansalup/smart-mcq-solver-model",
-            filename="BERT-epoch02-val_map30.9950.ckpt",
+            filename="bert_state_dict.pth",
         )
 
         # Model loading
-        self.model = BERT.load_from_checkpoint(checkpoint_path, map_location=self.device)
+        self.model = BERT()
+        state_dict = torch.load(weights_path, map_location="cpu", weights_only=True)
+        self.model.load_state_dict(state_dict)
 
         self.model.eval()
-        self.model.to(self.device)
 
         # Tokenizer loading
         self.tokenizer = HFTokenizer(model_name="bert-base-uncased")
 
     @torch.inference_mode()
     def predict(self,prompt, options):
-        inputs = self.tokenizer.encode_batch(prompt, options, max_length=242)
+        device = "cuda" if torch.cuda.is_available() else "cpu"
 
-        inputs = {k: v.to(self.device) for k, v in inputs.items()}
+        if next(self.model.parameters()).device != torch.device(device):
+                    self.model.to(device)
 
-        logits = self.model(**inputs)
+        inputs = self.tokenizer.encode_batch(prompt, options)
+
+        # unsqueeze to add batch dimension and move to device
+        inputs = {k: v.unsqueeze(0).to(device) for k, v in inputs.items()}
+
+        logits = self.model(inputs)
 
         probs = torch.softmax(logits, dim=1)[0]
 
@@ -40,7 +43,8 @@ class Solver:
         predictions ={
             LABELS[i]: float(prob)
             for i, prob in zip(
-                top3.indices.tolist(), top3.values.tolist()
+                top3.indices.tolist(),
+                top3.values.tolist()
             )
         }
 

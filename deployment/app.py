@@ -21,10 +21,7 @@ demo = gr.Interface(
         gr.Textbox(label="Option D", placeholder="Enter option D here..."),
         gr.Textbox(label="Option E", placeholder="Enter option E here..."),
     ],
-    outputs=[
-        gr.Textbox(label="Top 3 Predictions"),
-        gr.Textbox(label="Confidence"),
-    ],
+    outputs=gr.Label(label="Predicted Answers", num_top_classes=3),
     title="Smart MCQ Solver",
     examples=examples,
     cache_examples=False,
