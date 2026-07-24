@@ -5,6 +5,7 @@ import torch
 from inference import solver
 from examples import examples
 
+@spaces.GPU
 def solve(prompt, a, b, c, d, e):
     options = [a, b, c, d, e]
     predictions = solver.predict(prompt, options)
@@ -28,7 +29,6 @@ demo = gr.Interface(
     examples=examples,
     cache_examples=False,
     description="Smart MCQ solver can solve multiple choice questions. Enter the question and the options, and the model will predict the answer.",
-    allow_flagging="never",
 )
 
 if __name__ == "__main__":
