@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "deployment/**"
+      - ".github/workflows/deploy-to-hf.yml"
+
   workflow_dispatch:
 
 jobs:
