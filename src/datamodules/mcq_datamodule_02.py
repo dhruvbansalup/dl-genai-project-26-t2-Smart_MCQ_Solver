@@ -38,6 +38,10 @@ class MCQDataModule02(pl.LightningDataModule):
         self.fold=fold
 
     def setup(self, stage=None):
+        self.train_dataset=None
+        self.val_dataset=None
+        self.test_dataset=None
+
         if self.train_df is not None:
             self.train_dataset = MCQDataset(self.train_df, self.tokenizer, self.max_length, return_labels=True)
         if self.val_df is not None:
@@ -60,7 +64,7 @@ class MCQDataModule02(pl.LightningDataModule):
 
     def val_dataloader(self):
         if self.val_df is None:
-            return None
+            return []
         return DataLoader(
             self.val_dataset,
             batch_size=self.batch_size,
