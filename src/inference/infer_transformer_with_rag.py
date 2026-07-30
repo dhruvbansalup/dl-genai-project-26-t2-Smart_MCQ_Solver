@@ -49,7 +49,8 @@ MODELS={
         "tokenizer_model_name": "microsoft/deberta-v3-base",
         "model_handle": "dhruvbansalup/dl-genai-project-26-t2-smart-mcq-solver/pyTorch/deberta_v3_base",
         # "checkpoint_name": "DeBERTa_v3_base_RAG-epoch02-val_map30.9773.ckpt",
-        "checkpoint_name": "DeBERTa_v3_base_RAG-epoch02-val_map30.8624.ckpt",
+        # "checkpoint_name": "DeBERTa_v3_base_RAG-epoch02-val_map30.8624.ckpt",
+        "checkpoint_name": "last.ckpt", # Final
 
         # RAG specific configurations
         "rag_embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
