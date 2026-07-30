@@ -1,11 +1,12 @@
 import argparse
+import kagglehub
 import pandas as pd
 import torch
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
 
 from scripts.make_processed_data_v001 import ensure_processed_data_exists_v001
-from src.config import EnvConfig, RAGConfig, GeneralConfig
+from src.config import EnvConfig, KaggleConfig, RAGConfig, GeneralConfig
 from src.datamodules.rag_datamodule_02 import RAGDataModule02
 from src.rag.rag import RAGPipeline
 from src.rag.knowledge_base import MCQKnowledgeBase
@@ -57,8 +58,19 @@ def final_trainer(DATA_MODULE, MODEL,max_epochs, upload_kaggle=True, experiment_
 
     #Upload to Kagglehub
     if upload_kaggle:
-        from src.utils.kaggle_utils import upload_to_kagglehub
-        upload_to_kagglehub(MODEL,trainer)
+        try:
+            last_checkpoint_path = trainer.checkpoint_callback.last_model_path
+            VARIATION = MODEL.__class__.__name__.lower()
+            handle = f"{KaggleConfig.KAGGLE_USERNAME}/{KaggleConfig.KAGGLEHUB_MODEL_REPO}/pytorch/{VARIATION}"
+            model_ref = kagglehub.model_upload(
+                handle=handle,
+                local_model_dir=last_checkpoint_path,
+                version_notes=f"{MODEL.__class__.__name__} trained on {trainer.current_epoch} epochs at {time_now_ist()}",
+            )
+
+            print(f"{VARIATION} Model uploaded to Kagglehub Successfully!")
+        except Exception as e:
+            print(f"Error uploading model to Kagglehub: {e}")
 
     return trainer
 
